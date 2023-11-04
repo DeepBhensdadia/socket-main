@@ -105,23 +105,30 @@ io.sockets.on('connection',(socket)=>{
      socket.on('onScanQr',(data)=>{
 
         console.log("inonScanQr",data)
-        let companydata = data;
+        let companydata = JSON.parse(data);
         console.log("companydata",companydata)
 
 
         //find web to set token
         userObj = usersRoom.find((element)=>{
+            console.log(element.socketId, companydata.webBrowsSocketId);
             return element.socketId == companydata.webBrowsSocketId;
         })
 
 
         console.log("userObj",userObj)
-        
+        console.log("info-JSON", JSON.parse(companydata.companyInfo));
+        console.log("info", companydata.companyInfo);
+        console.log("company", JSON.parse(companydata.companyInfo).company);
+
+        // let company = JSON.parse(JSON.parse(companydata.companyInfo).company);
         //set token
-        userObj.token = companydata.companyInfo[2].auth
+        userObj.token = JSON.parse(companydata.companyInfo).company.auth
 
         //check if socket(web) is connect or not
-        if(io.sockets.sockets[companydata.webBrowsSocketId]!=undefined){
+        console.log(io.sockets.sockets);
+        console.log(io.sockets.sockets.get(companydata.webBrowsSocketId));
+        if(io.sockets.sockets.get(companydata.webBrowsSocketId)!=undefined){
             console.log("inIf")
 
             //set webBrowsSocketId
